@@ -1,42 +1,95 @@
-// ─── CANDIDATE: This is your starting point ───────────────────────────────────────────────────
-//
-// Build the Mixed Pallet Builder feature here.
-//
-// Requirements:
-//   • Product Catalog  — fetch from GET /api/products (?category= and ?q=)
-//   • Pallet Builder   — add products, adjust quantities, view real-time stats
-//   • Persist pallet state across page refreshes (Zustand + localStorage)
-//
-// The scaffold provides:
-//   • components/ui/      — Badge, Button, Card, EmptyState, ErrorMessage, Input, Spinner
-//   • components/layout/  — Header, PageWrapper, Sidebar
-//   • components/feedback/ — ErrorState, LoadingState, ProductCardSkeleton
-//   • hooks/useAsync.ts   — generic async state management
-//   • hooks/useDebounce.ts — debounce search input
-//   • lib/api.ts          — fetcher<T>() with ApiError
-//   • lib/utils.ts        — cn(), formatCurrency(), formatWeight(), etc.
-//   • lib/constants.ts    — PALLET_MAX_CASES, PALLET_MAX_WEIGHT_LBS, ROUTES
-//   • types/              — Product, PalletItem, PalletStats, AsyncState
-//   • store/index.ts      — Zustand convention — implement your slice here
-//
-// See README.md for the full spec, including the intentionally ambiguous
-// capacity-limit requirement. Make a decision and document it in your README.
-//
-// Feel free to modify anything. The scaffold is a starting point, not a cage.
-//
-// Good luck! — ePallet Engineering
-// ─────────────────────────────────────────────────────────────────────────────────────
+"use client";
+
+import { useState, useEffect } from "react";
+import { fetcher } from "@/lib/api";
+import type { ProductsResponse } from "@/types";
+import { ProductGrid } from "@/components/catalog/ProductGrid";
+import { CategoryFilter } from "@/components/catalog/CategoryFilter";
+import { PalletPanel } from "@/components/pallet/PalletPanel";
+import { Header } from "@/components/layout/Header";
+import { Input } from "@/components/ui/Input";
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All");
+  const [data, setData] = useState<ProductsResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // BUG 1: query is used directly — should be debounced first
+        const result = await fetcher<ProductsResponse>("/api/products", {
+          category: category === "All" ? undefined : category,
+          q: query || undefined,
+        });
+        if (!cancelled) {
+          setData(result);
+          setLoading(false);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err : new Error("Failed to load products")
+          );
+          setLoading(false);
+        }
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [query, category]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
-      <h1 className="text-3xl font-bold text-primary-600">Mixed Pallet Builder</h1>
-      <p className="max-w-md text-center text-neutral-500">
-        Your challenge starts here. Replace this placeholder with the Pallet
-        Builder feature. See{" "}
-        <code className="rounded bg-neutral-100 px-1 font-mono text-sm">README.md</code>{" "}
-        for the full spec.
-      </p>
-    </main>
+    <div className="flex flex-col min-h-screen bg-neutral-50">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="mb-6 space-y-4">
+            <Input
+              id="search"
+              placeholder="Search by name or brand…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              leftSlot={
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              }
+            />
+            <CategoryFilter
+              categories={["All", ...(data?.categories ?? [])]}
+              selected={category}
+              onChange={setCategory}
+            />
+          </div>
+          <ProductGrid
+            products={data?.products ?? []}
+            loading={loading}
+            error={error}
+            onRetry={() => setQuery((q) => q)}
+          />
+        </main>
+        <PalletPanel />
+      </div>
+    </div>
   );
 }
