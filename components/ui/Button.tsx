@@ -13,7 +13,6 @@ interface ButtonProps
     WithClassName {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  /** Shows a spinner and disables the button when true. */
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -49,14 +48,13 @@ const spinnerSizeMap: Record<ButtonSize, "xs" | "sm" | "md"> = {
 };
 
 /**
- * Primary interactive element. Forwards refs and supports all native button attributes.
+ * Primary interactive element. Defaults to type="button" to avoid accidental
+ * form submissions. Pass type="submit" explicitly when needed.
  *
  * @example
  * <Button variant="primary" size="md" onClick={handleAdd}>
  *   Add to Pallet
  * </Button>
- *
- * <Button variant="secondary" loading>Saving…</Button>
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -78,6 +76,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
+        type="button"
         disabled={isDisabled}
         className={cn(
           "inline-flex items-center justify-center rounded font-medium transition-colors duration-150",

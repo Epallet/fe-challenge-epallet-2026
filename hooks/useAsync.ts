@@ -1,17 +1,15 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { AsyncState } from "@/types";
 
-/** Return type of useAsync — extends async state with execute and reset. */
 interface UseAsyncReturn<T> extends AsyncState<T> {
-  /** Trigger the async function. Returns the result, or null on error. */
   execute: () => Promise<T | null>;
-  /** Reset state back to the initial idle state. */
   reset: () => void;
 }
 
 /**
  * Generic hook for managing async operations with loading / error / data state.
- * Safe against state updates after component unmount.
+ * Safe against state updates after unmount and against out-of-order responses
+ * (only the most recent call's result is applied).
  *
  * @example
  * const { data, loading, error, execute } = useAsync(() =>
@@ -27,13 +25,13 @@ export function useAsync<T>(asyncFn: () => Promise<T>): UseAsyncReturn<T> {
     error: null,
   });
 
-  // Keep a stable ref to asyncFn so execute() always calls the latest version
-  // without needing to be recreated on every render.
+  // Always call the latest version of asyncFn without recreating execute
   const asyncFnRef = useRef(asyncFn);
   useEffect(() => {
     asyncFnRef.current = asyncFn;
   });
 
+  // Guard against updates after unmount
   const mountedRef = useRef(true);
   useEffect(() => {
     mountedRef.current = true;
@@ -42,19 +40,23 @@ export function useAsync<T>(asyncFn: () => Promise<T>): UseAsyncReturn<T> {
     };
   }, []);
 
+  // Guard against out-of-order responses: only the latest call's result wins
+  const callIdRef = useRef(0);
+
   const execute = useCallback(async (): Promise<T | null> => {
     if (!mountedRef.current) return null;
 
+    const callId = ++callIdRef.current;
     setState({ data: null, loading: true, error: null });
 
     try {
       const result = await asyncFnRef.current();
-      if (mountedRef.current) {
+      if (mountedRef.current && callIdRef.current === callId) {
         setState({ data: result, loading: false, error: null });
       }
       return result;
     } catch (err) {
-      if (mountedRef.current) {
+      if (mountedRef.current && callIdRef.current === callId) {
         setState({
           data: null,
           loading: false,
