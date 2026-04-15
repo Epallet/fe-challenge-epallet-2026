@@ -1,4 +1,4 @@
-/** A wholesale product from the ePallet catalog. */
+/** A wholesale product from the Epallet catalog. */
 export interface Product {
   id: string;
   sku: string;

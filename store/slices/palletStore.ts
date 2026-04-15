@@ -10,7 +10,7 @@ interface PalletState {
   clearPallet: () => void;
 }
 
-export const usePalletStore = create<PalletState>()(
+export const usEpalletStore = create<PalletState>()(
   persist(
     (set) => ({
       items: [],
@@ -34,6 +34,6 @@ export const usePalletStore = create<PalletState>()(
 
       clearPallet: () => set({ items: [] }),
     }),
-    { name: "epallet-pallet-store" }
+    { name: "Epallet-pallet-store" }
   )
 );

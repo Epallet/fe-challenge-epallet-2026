@@ -1,6 +1,6 @@
 "use client";
 
-import { usePalletStore } from "@/store";
+import { usEpalletStore } from "@/store";
 import type { PalletItem as PalletItemType } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 
@@ -9,8 +9,8 @@ interface PalletItemProps {
 }
 
 export function PalletItem({ item }: PalletItemProps) {
-  const removeItem = usePalletStore((state) => state.removeItem);
-  const updateQuantity = usePalletStore((state) => state.updateQuantity);
+  const removeItem = usEpalletStore((state) => state.removeItem);
+  const updateQuantity = usEpalletStore((state) => state.updateQuantity);
 
   const decrease = () => {
     if (item.quantity > 1) {

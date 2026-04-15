@@ -1,4 +1,4 @@
-# ePallet — Frontend Interview
+# Epallet — Frontend Interview
 
 ```bash
 npm install

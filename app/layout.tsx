@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: `%s | ${APP_NAME}`,
   },
   description:
-    "Build and manage mixed pallets from the ePallet wholesale catalog.",
+    "Build and manage mixed pallets from the Epallet wholesale catalog.",
 };
 
 export default function RootLayout({

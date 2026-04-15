@@ -1,4 +1,4 @@
-# ePallet Frontend Code Challenge
+# Epallet Frontend Code Challenge
 
 Welcome! This is a live coding exercise — there's no trick, no gotcha, no single "right" answer. We want to see how you think, how you read unfamiliar code, and how you communicate while working.
 
@@ -8,7 +8,7 @@ Welcome! This is a live coding exercise — there's no trick, no gotcha, no sing
 
 ## The App
 
-You're looking at a simplified version of ePallet's **Pallet Builder** — a wholesale ordering tool where buyers browse a product catalog and assemble a mixed pallet for delivery.
+You're looking at a simplified version of Epallet's **Pallet Builder** — a wholesale ordering tool where buyers browse a product catalog and assemble a mixed pallet for delivery.
 
 The app is already scaffolded and mostly working. Your job is to:
 
@@ -25,6 +25,7 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). You should see:
+
 - A product catalog on the left with search and category filters
 - A "My Pallet" sidebar on the right
 - Products currently show a placeholder card with "implement me →"
@@ -38,6 +39,7 @@ Open [http://localhost:3000](http://localhost:3000). You should see:
 The component is a scaffold — replace the placeholder with a real implementation.
 
 ### It should display:
+
 - Product **name** and **brand**
 - **Price per case** — use `formatCurrency(product.pricePerCase)` from `@/lib/utils`
 - **Weight per case** — use `formatWeight(product.weightPerCase)` from `@/lib/utils`
@@ -46,6 +48,7 @@ The component is a scaffold — replace the placeholder with a real implementati
 - **Out-of-stock** products should look visually different and have the button disabled
 
 ### Already available to import — no installs needed:
+
 ```tsx
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -54,6 +57,7 @@ import { cn, formatCurrency, formatWeight } from "@/lib/utils";
 ```
 
 ### Product type for reference:
+
 ```ts
 interface Product {
   id: string;
@@ -61,9 +65,9 @@ interface Product {
   name: string;
   brand: string;
   category: string;
-  pricePerCase: number;   // USD
-  casePack: number;       // units per case
-  weightPerCase: number;  // lbs
+  pricePerCase: number; // USD
+  casePack: number; // units per case
+  weightPerCase: number; // lbs
   inStock: boolean;
 }
 ```
@@ -75,11 +79,13 @@ interface Product {
 The app has three bugs planted in it. Some are obvious in the UI, some need a closer look at the code. There are no red herrings — every bug is fixable in a few lines.
 
 **Hints (without spoilers):**
+
 - One bug is visible in the browser's Network tab
 - One bug is visible by clicking "Add" on the same product twice
 - One bug is visible by watching the capacity bar in the pallet sidebar
 
 The relevant files are:
+
 - [`app/page.tsx`](app/page.tsx)
 - [`store/slices/palletStore.ts`](store/slices/palletStore.ts)
 - [`components/pallet/PalletPanel.tsx`](components/pallet/PalletPanel.tsx)
@@ -88,14 +94,14 @@ The relevant files are:
 
 ## What We're Looking For
 
-| Area | What matters |
-|---|---|
-| **Correctness** | Does the component render correctly? Are bugs actually fixed? |
-| **React patterns** | Appropriate use of hooks, state, and side effects |
-| **TypeScript** | Proper typing — no `any`, no ignoring the type system |
-| **Readability** | Clean, scannable JSX; logic out of the template |
+| Area                   | What matters                                                        |
+| ---------------------- | ------------------------------------------------------------------- |
+| **Correctness**        | Does the component render correctly? Are bugs actually fixed?       |
+| **React patterns**     | Appropriate use of hooks, state, and side effects                   |
+| **TypeScript**         | Proper typing — no `any`, no ignoring the type system               |
+| **Readability**        | Clean, scannable JSX; logic out of the template                     |
 | **Debugging approach** | How do you find bugs — do you read code, test the UI, use DevTools? |
-| **Communication** | Talk through what you're doing and why |
+| **Communication**      | Talk through what you're doing and why                              |
 
 There's no points for speed. A well-reasoned, partially complete solution is better than a rushed one.
 

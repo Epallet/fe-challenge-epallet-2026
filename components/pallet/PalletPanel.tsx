@@ -1,15 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { usePalletStore } from "@/store";
+import { usEpalletStore } from "@/store";
 import { PalletItem } from "./PalletItem";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency, formatWeight, cn } from "@/lib/utils";
 import { PALLET_MAX_CASES, PALLET_MAX_WEIGHT_LBS } from "@/lib/constants";
 
 export function PalletPanel() {
-  const items = usePalletStore((state) => state.items);
-  const clearPallet = usePalletStore((state) => state.clearPallet);
+  const items = usEpalletStore((state) => state.items);
+  const clearPallet = usEpalletStore((state) => state.clearPallet);
 
   const stats = useMemo(() => {
     const totalCases = items.reduce((sum, i) => sum + i.quantity, 0);

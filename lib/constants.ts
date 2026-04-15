@@ -5,7 +5,7 @@ export const PALLET_MAX_CASES = 48;
 export const PALLET_MAX_WEIGHT_LBS = 2000;
 
 /** Application display name. */
-export const APP_NAME = "ePallet Pallet Builder";
+export const APP_NAME = "Epallet Pallet Builder";
 
 /** Client-side route constants — update if you add new pages. */
 export const ROUTES = {

@@ -2,7 +2,7 @@ import { ProductCard } from "./ProductCard";
 import { ProductCardSkeleton } from "@/components/feedback/LoadingState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { usePalletStore } from "@/store";
+import { usEpalletStore } from "@/store";
 import type { Product } from "@/types";
 
 interface ProductGridProps {
@@ -18,7 +18,7 @@ export function ProductGrid({
   error,
   onRetry,
 }: ProductGridProps) {
-  const addItem = usePalletStore((state) => state.addItem);
+  const addItem = usEpalletStore((state) => state.addItem);
 
   if (loading) {
     return (
