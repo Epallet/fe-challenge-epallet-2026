@@ -7,7 +7,7 @@ interface LoadingStateProps extends WithClassName {
   message?: string;
 }
 
-interface ProductCardSkeletonProps extends WithClassName {}
+type ProductCardSkeletonProps = WithClassName;
 
 /**
  * Full-area loading indicator with a spinner and message.

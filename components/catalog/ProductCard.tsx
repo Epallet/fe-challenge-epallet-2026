@@ -21,7 +21,7 @@ interface ProductCardProps extends WithClassName {
   onAdd: (product: Product) => void;
 }
 
-export function ProductCard({ product, onAdd, className }: ProductCardProps) {
+export function ProductCard({ product, onAdd, className }: ProductCardProps) {  // eslint-disable-line @typescript-eslint/no-unused-vars
   // Replace this placeholder with your implementation
   return (
     <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-4">
