@@ -1,76 +1,82 @@
 # Mixed Pallet Builder — Frontend Engineering Challenge
 
-Welcome, and thanks for taking the time. This challenge is designed to be
-straightforward: build a real feature on a real-ish stack. No trick questions,
-no gotchas. We want to see how you work.
+Hey! Thanks for taking the time to do this. The goal is simple: build a real
+feature on a real stack. No trick questions, no gotchas. We want to see how you
+think, how you make decisions, and how you write code.
 
 ---
 
-## 1. Context
+## Step 1 — Get it running
 
-[ePallet](https://www.epallet.com) is a B2B wholesale marketplace where
-business buyers order products by the case. One of our most-used features is
-**Mixed Pallets** — it lets buyers combine multiple SKUs on a single pallet
-instead of ordering full pallets of one product. You’re rebuilding this feature
-on our new Next.js stack.
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). You should see a placeholder page.
+Your job is to replace it with the Pallet Builder feature.
+
+Before you submit, make sure this passes:
+
+```bash
+npm run type-check
+```
 
 ---
 
-## 2. What to Build
+## Step 2 — Understand the context
+
+[ePallet](https://www.epallet.com) is a B2B wholesale marketplace where business
+buyers order products by the case. One of our core features is **Mixed Pallets**
+— it lets buyers combine multiple SKUs on a single pallet instead of ordering a
+full pallet of one product. You’re rebuilding this feature on our new Next.js stack.
+
+---
+
+## Step 3 — Build these two things
 
 ### Product Catalog
 
-- Fetch products from `GET /api/products` (see [API details](#api))
-- Display in a grid or list layout — your choice
+- Fetch products from `GET /api/products` (already wired up, see [API](#api) below)
+- Display them in a grid or list — your choice
 - Filter by category
 - Search by product name or brand
-- Show loading states while fetching
-- Show an error state with a retry button if the fetch fails
-- Out-of-stock products should be visually distinct and **not** addable to the pallet
+- Show a **loading state** while fetching (the API has a 600ms delay on purpose)
+- Show an **error state** with a retry button if the fetch fails
+- Out-of-stock products should look different and **not** be addable to the pallet
 
 ### Pallet Builder
 
-- Add products to the pallet with a chosen quantity (1–20 cases per SKU)
-- Show a real-time pallet summary:
+- Add products to the pallet with a quantity (1–20 cases per SKU)
+- Show a real-time summary:
   - Number of unique SKUs
   - Total cases
   - Total weight (lbs)
   - Subtotal (USD)
-  - Visual capacity bar (cases used vs. 48-case max)
-- Adjust quantity or remove items from the pallet
-- **Persist the pallet across page refreshes** using Zustand’s `persist` middleware
+  - A visual bar showing how full the pallet is (max 48 cases)
+- Let the buyer adjust quantity or remove items
+- **The pallet should survive a page refresh** — use Zustand’s `persist` middleware
 
 ---
 
-## 3. The Ambiguous Requirement
+## Step 4 — Make a decision on this
 
 > The pallet holds a maximum of **48 cases**. We haven’t defined what happens
-> when a buyer tries to exceed that limit. Should adding more cases be **blocked**?
-> Should it **warn** but allow? Should it **auto-cap** the quantity? Something else?
+> when a buyer tries to go over that limit. Should it **block** them? **Warn** but
+> allow? **Auto-cap** the quantity? Something else entirely?
 
-> **Make a decision. Document your choice and reasoning in this README.**
+**Pick one. Implement it. Write a short explanation of your reasoning in this
+README before you submit.**
 
-There’s no single right answer — we’re interested in how you reason about an
-underspecified requirement and whether you can commit to a decision.
-
----
-
-## 4. Tech Requirements
-
-| Requirement | Details |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript — strict mode, no `any` |
-| Styling | Tailwind CSS (design tokens are pre-configured) |
-| State | Zustand 4 |
-
-That’s the full list. No other libraries required.
+There’s no correct answer — we want to see how you handle an underspecified
+requirement. The explanation matters as much as the implementation.
 
 ---
 
-## 5. What’s Already Scaffolded
+## Step 5 — Understand what’s already here
 
-The following is provided — use it, modify it, or replace it:
+The scaffold gives you a full design system and a set of typed utilities.
+You don’t have to use all of it, but it’s there so you’re not starting from zero.
 
 | Path | What it is |
 |---|---|
@@ -78,16 +84,17 @@ The following is provided — use it, modify it, or replace it:
 | `components/layout/` | Header, PageWrapper, Sidebar |
 | `components/feedback/` | ErrorState, LoadingState, ProductCardSkeleton |
 | `hooks/useAsync.ts` | Generic async state: `{ data, loading, error, execute, reset }` |
-| `hooks/useDebounce.ts` | Debounce hook for search input |
+| `hooks/useDebounce.ts` | Debounce hook — use this on the search input |
 | `lib/api.ts` | Typed `fetcher<T>()` with `ApiError` class |
-| `lib/utils.ts` | `cn()`, `formatCurrency()`, `formatWeight()`, `formatNumber()`, `truncate()` |
-| `lib/constants.ts` | `PALLET_MAX_CASES`, `PALLET_MAX_WEIGHT_LBS`, `ROUTES`, `CATEGORIES` |
-| `types/api.ts` | `Product`, `ProductsResponse`, `PalletItem`, `PalletStats` |
-| `store/index.ts` | Zustand convention — your slice goes in `store/slices/` |
-| `data/mock.json` | 20 wholesale products across 5 categories |
-| `app/api/products/route.ts` | GET handler with 600ms simulated delay, category + search filtering |
+| `lib/utils.ts` | `cn()`, `formatCurrency()`, `formatWeight()`, `formatNumber()`, `truncate()`, `clamp()` |
+| `lib/constants.ts` | `PALLET_MAX_CASES` (48), `PALLET_MAX_WEIGHT_LBS` (2000), `ROUTES`, `CATEGORIES` |
+| `types/api.ts` | `Product`, `ProductsResponse`, `PalletItem`, `PalletStats` interfaces |
+| `store/index.ts` | Zustand convention doc — create `store/slices/palletStore.ts` and re-export here |
+| `data/mock.json` | 20 realistic wholesale products across 5 categories |
+| `app/api/products/route.ts` | Already built — supports `?category=` and `?q=` |
+| `tailwind.config.ts` | Full design token system (primary, neutral, success, warning, error, accent) |
 
-The scaffold is a starting point, not a constraint. You can modify anything.
+Feel free to modify or replace anything. The scaffold is a starting point, not a cage.
 
 ---
 
@@ -95,68 +102,88 @@ The scaffold is a starting point, not a constraint. You can modify anything.
 
 ```
 GET /api/products
-  ?category=Beverages   → filter by category; "all" or omit for no filter
-  ?q=coca               → search by name, brand, or SKU (case-insensitive)
+  ?category=Beverages   → filter by category; omit or "all" for no filter
+  ?q=cola               → search by name, brand, or SKU (case-insensitive)
 
-Response: { products: Product[], total: number, categories: string[] }
+Response:
+  {
+    products:   Product[],
+    total:      number,
+    categories: string[]
+  }
 ```
 
-Note: the API has a **600ms artificial delay** so you can see your loading states work.
+The API has a **600ms artificial delay** so your loading states actually show up.
 
 ---
 
-## 6. What We’re NOT Evaluating
+## Using AI Tools (Claude, Copilot, Cursor, etc.)
+
+**You’re encouraged to use AI tools.** This is how we work at ePallet, and
+pretending otherwise would be a weird test.
+
+A few notes:
+
+- **Claude Code** is our preferred tool internally. If you have access, use it.
+  The CLI (`claude`) can read your entire codebase and make multi-file edits.
+- **Agents and slash commands** are fair game. `/review`, `/commit`, asking
+  Claude to scaffold a component or a Zustand slice — all fine.
+- We evaluate the **quality of the result** and your ability to explain your
+  decisions in the debrief — not whether you used AI to get there.
+- If Claude wrote a chunk of code, be ready to walk through it and explain why
+  you kept it as-is or what you changed.
+
+The debrief will have questions like *“why did you structure the store this way?”*
+and *“what would you do differently?”* — those are the things we actually care about.
+
+---
+
+## What we’re NOT evaluating
 
 - Pixel-perfect design
 - Authentication or user accounts
 - A real backend or database
 - Deployment
-- Test coverage (tests are a bonus, not a requirement)
+- Test coverage (nice to have, not required)
 
 ---
 
-## 7. Getting Started
+## Time expectation
 
-```bash
-npm install
-npm run dev        # http://localhost:3000
-npm run type-check # make sure TypeScript is happy before submitting
-```
+**3–4 hours.** Please don’t spend a whole weekend on this.
 
-Your starting point is `app/page.tsx`.
+If something is taking longer than expected: skip it, leave a comment in the
+code, note it in your README update, and move on. An incomplete feature with
+a clear note is better than a missing feature with no explanation.
 
 ---
 
-## 8. How to Submit
+## How to submit
 
-Push your work to a **new public GitHub repo** and send us the link. That’s it.
-
----
-
-## 9. Time Expectation
-
-**3–4 hours.** We respect your time — please don’t over-engineer this.
-
-If something is taking longer than expected, skip it, leave a note, and move on.
-An incomplete feature with a clear comment is better than a missing feature with
-no explanation.
+1. Push your work to a **new public GitHub repo**
+2. Update this README with your capacity-limit decision (and anything else notable)
+3. Send us the link
 
 ---
 
-## 10. AI Tools
+## Before you submit — quick checklist
 
-You may use AI tools (Copilot, Claude, Cursor, etc.). We care about the quality
-of the result and your ability to explain your decisions in the debrief — not
-whether you used AI to get there.
+- [ ] `npm run dev` starts without errors
+- [ ] `npm run type-check` passes (no TypeScript errors)
+- [ ] Product catalog loads, filters, and searches
+- [ ] Pallet persists after page refresh
+- [ ] Out-of-stock products are not addable
+- [ ] You’ve documented your capacity-limit decision in this README
 
 ---
 
-## 11. Your README
+## Update this section before submitting
 
-Before submitting, please update this file with:
+**Your capacity-limit decision:**
+<!-- What did you choose (block / warn / auto-cap / other) and why? -->
 
-1. **Your decision on the capacity limit** — what you chose and why
-2. **Any notable tradeoffs** you made under time pressure
-3. **Anything you’d do differently** with more time
+**Tradeoffs you made under time pressure:**
+<!-- What did you skip or simplify? -->
 
-Keep it short. A few bullet points is fine.
+**What you’d do differently with more time:**
+<!-- Anything you’d clean up or add? -->
