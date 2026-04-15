@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Brand tokens ──────────────────────────────────────────────────────────── */
+:root {
+  --color-primary:       #076ddc;
+  --color-primary-light: #3b9ef4;
+  --color-primary-dark:  #0655ad;
+  --color-accent:        #07dcb6;
+  --color-secondary:     #e3c8b5;
+
+  --header-height:           64px;
+  --sidebar-width:           280px;
+  --sidebar-collapsed-width: 64px;
+  --page-max-width:          1440px;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+/* ─── Dark mode overrides ─────────────────────────────────────────────────── */
+.dark {
+  --color-primary:       #3b9ef4;
+  --color-primary-light: #7bbef9;
+  --color-primary-dark:  #076ddc;
+  --color-accent:        #2dd9c4;
+}
+
+/* ─── Base reset ──────────────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-neutral-50 text-neutral-900 font-sans;
+  }
+
+  img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input, button, textarea, select {
+    font: inherit;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold leading-tight;
+  }
+
+  /* Focus-visible ring using primary-500 — applied globally */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  }
+}
+
+/* ─── Component utilities ──────────────────────────────────────────────────────── */
+@layer components {
+  /* Skeleton shimmer — use className="skeleton" on placeholder elements */
+  .skeleton {
+    @apply rounded bg-neutral-200 dark:bg-neutral-700;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(255 255 255 / 0.5) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .dark .skeleton {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(255 255 255 / 0.07) 50%,
+      transparent 100%
+    );
+  }
+}
+
+/* ─── Utility classes ────────────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Thin, styled scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.neutral.300') transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar       { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track  { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb  {
+    background-color: theme('colors.neutral.300');
+    border-radius: 9999px;
+  }
+
+  /* Reusable focus ring — apply to interactive elements that manage their own focus */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+  }
+}
+
+/* ─── Keyframes ────────────────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position:  200% 0; }
+  100% { background-position: -200% 0; }
+}
