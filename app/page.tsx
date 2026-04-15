@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/Input";
 export default function Home() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
+  const [retryCount, setRetryCount] = useState(0);
   const [data, setData] = useState<ProductsResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -23,7 +24,6 @@ export default function Home() {
       setLoading(true);
       setError(null);
       try {
-        // BUG 1: query is used directly — should be debounced first
         const result = await fetcher<ProductsResponse>("/api/products", {
           category: category === "All" ? undefined : category,
           q: query || undefined,
@@ -46,7 +46,7 @@ export default function Home() {
     return () => {
       cancelled = true;
     };
-  }, [query, category]);
+  }, [query, category, retryCount]);
 
   return (
     <div className="flex flex-col min-h-screen bg-neutral-50">
@@ -85,7 +85,7 @@ export default function Home() {
             products={data?.products ?? []}
             loading={loading}
             error={error}
-            onRetry={() => setQuery((q) => q)}
+            onRetry={() => setRetryCount((c) => c + 1)}
           />
         </main>
         <PalletPanel />

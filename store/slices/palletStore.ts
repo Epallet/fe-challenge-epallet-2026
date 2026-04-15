@@ -15,8 +15,6 @@ export const usePalletStore = create<PalletState>()(
     (set) => ({
       items: [],
 
-      // BUG 2: Always appends a new entry — should check if product already
-      // exists and increment quantity instead of creating a duplicate
       addItem: (product: Product) =>
         set((state) => ({
           items: [...state.items, { product, quantity: 1 }],

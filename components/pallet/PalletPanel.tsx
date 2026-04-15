@@ -26,8 +26,6 @@ export function PalletPanel() {
       totalCases,
       totalWeightLbs,
       subtotalUsd,
-      // BUG 3: Wrong denominator — capacity bar always shows ~2% per case
-      // instead of filling to 100% at 48 cases
       caseCapacityRatio: totalCases / 100,
       weightCapacityRatio: totalWeightLbs / PALLET_MAX_WEIGHT_LBS,
     };

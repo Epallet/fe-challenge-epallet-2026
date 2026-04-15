@@ -14,8 +14,7 @@
 //
 // ─────────────────────────────────────────────────────────────────────────────────
 
-import type { Product } from "@/types";
-import type { WithClassName } from "@/types";
+import type { Product, WithClassName } from "@/types";
 
 interface ProductCardProps extends WithClassName {
   product: Product;
@@ -23,6 +22,11 @@ interface ProductCardProps extends WithClassName {
 }
 
 export function ProductCard({ product, onAdd, className }: ProductCardProps) {
-  // Your code here
-  return null;
+  // Replace this placeholder with your implementation
+  return (
+    <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-4">
+      <p className="text-sm font-medium text-neutral-700">{product.name}</p>
+      <p className="mt-1 text-xs text-neutral-400">implement me →</p>
+    </div>
+  );
 }
